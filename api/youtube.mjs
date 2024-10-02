@@ -8,25 +8,37 @@ export default async function handler(req, res) {
     const CHANNEL_ID = 'UCvuBk9XEgxn1WUkVvKzTd7g'; // Replace with your channel ID
     const MAX_RESULTS = 1;
 
-    try {
-        const urlParams = new URLSearchParams(req.url);
+    // If no API key is set, return an error.
+    if (!API_KEY) {
+        return res.status(500).json({ error: 'YouTube API key is missing' });
+    }
 
-        if (urlParams.has('type') && urlParams.get('type') === 'channel') {
+    // Get the query parameters
+    const { type } = req.query;
+
+    try {
+        let response;
+
+        if (type === 'channel') {
             // Fetch YouTube channel information
-            const response = await axios.get(
+            response = await axios.get(
                 `https://www.googleapis.com/youtube/v3/channels?part=snippet&id=${CHANNEL_ID}&key=${API_KEY}`
             );
-            res.status(200).json(response.data);
-        } else if (urlParams.has('type') && urlParams.get('type') === 'latest-video') {
+        } else if (type === 'latest-video') {
             // Fetch YouTube latest video information
-            const response = await axios.get(
+            response = await axios.get(
                 `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${CHANNEL_ID}&maxResults=${MAX_RESULTS}&order=date&type=video&key=${API_KEY}`
             );
-            res.status(200).json(response.data);
         } else {
-            res.status(400).json({ error: 'Invalid request type' });
+            return res.status(400).json({ error: 'Invalid request type. Use "type=channel" or "type=latest-video".' });
         }
+
+        // Send the successful response
+        return res.status(200).json(response.data);
+
     } catch (error) {
-        res.status(500).json({ error: 'Error fetching data', details: error.message });
+        // Catch and return YouTube API errors
+        console.error('YouTube API Error:', error.response ? error.response.data : error.message);
+        return res.status(500).json({ error: 'Error fetching data from YouTube API', details: error.message });
     }
 }
