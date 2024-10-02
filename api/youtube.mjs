@@ -1,4 +1,7 @@
 import axios from 'axios';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 // Use environment variables for secure API key storage
 export default async function handler(req, res) {
