@@ -2,8 +2,10 @@
   "version": 2,
   "routes": [
     {
-      "src": "/api/(.*)",
+      "src": "/api/youtube",
       "dest": "/api/$1",
+      "src": "/api/twiter",
+      "dest": "/api/$2",
       "headers": {
         "Access-Control-Allow-Origin": "*"
       }
