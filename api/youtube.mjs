@@ -5,6 +5,8 @@ export default async function handler(req, res) {
   const CHANNEL_ID = 'UCvuBk9XEgxn1WUkVvKzTd7g';
 
   console.log('Request received:', req.url);  // Log incoming requests
+  console.log('API Key:', API_KEY); // Log API key to check if it's correctly set
+  console.log('Request type:', req.query.type); // Log the type of request being made
 
   try {
     if (req.query.type === 'channel') {
@@ -12,8 +14,8 @@ export default async function handler(req, res) {
         params: {
           part: 'snippet',
           id: CHANNEL_ID,
-          key: API_KEY
-        }
+          key: API_KEY,
+        },
       });
       res.status(200).json(response.data);
     } else if (req.query.type === 'latest-video') {
@@ -24,12 +26,12 @@ export default async function handler(req, res) {
           maxResults: 1,
           order: 'date',
           type: 'video',
-          key: API_KEY
-        }
+          key: API_KEY,
+        },
       });
       res.status(200).json(response.data);
     } else {
-      res.status(400).json({ error: 'Invalid request type. Use "channel" or "latest-video".' });
+      res.status(400).json({ error: 'Invalid request type' });
     }
   } catch (error) {
     console.error('Error:', error.response ? error.response.data : error.message);
