@@ -1,5 +1,6 @@
 {
   "version": 2,
+  
   "routes": [
     {
       "src": "/api/youtube",
@@ -8,8 +9,5 @@
         "Access-Control-Allow-Origin": "*"
       }
     }
-  ],"builds": [
-    { "src": "package.json", "use": "@vercel/next" },
-    { "src": "api/*.mjs", "use": "@vercel/node" }
   ]
 }
