@@ -29,7 +29,7 @@ export default async function handler(req, res) {
       });
       res.status(200).json(response.data);
     } else {
-      res.status(400).json({ error: 'Invalid request type' });
+      res.status(400).json({ error: 'Invalid request type. Use "channel" or "latest-video".' });
     }
   } catch (error) {
     console.error('Error:', error.response ? error.response.data : error.message);
