@@ -3,79 +3,61 @@ import axios from 'axios';
 // Access the API credentials from Vercel's environment variables
 const API_KEY = process.env.TWITTER_API_KEY;
 const API_KEY_SECRET = process.env.TWITTER_API_KEY_SECRET;
-const USER_ID = process.env.TWITTER_USER_ID;
+const BEARER_TOKEN = process.env.TWITTER_BEARER_TOKEN;
 
-if (!API_KEY || !API_KEY_SECRET || !USER_ID) {
-  throw new Error("Missing Twitter API credentials or User ID. Make sure they're set in environment variables.");
+if (!API_KEY || !API_KEY_SECRET || !BEARER_TOKEN) {
+  throw new Error("Missing Twitter API credentials in environment variables.");
 }
 
-const getBearerToken = async () => {
+// Function to get the user ID for @unenterLIVE
+const getUserIdByUsername = async (username: string) => {
   try {
-    const response = await axios.post(
-      'https://api.twitter.com/oauth2/token',
-      new URLSearchParams({ 'grant_type': 'client_credentials' }).toString(),
-      {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
-          Authorization: `Basic ${Buffer.from(`${API_KEY}:${API_KEY_SECRET}`).toString('base64')}`,
-        },
-      }
-    );
-    return response.data.access_token;
-  } catch (error) {
-    console.error('Error fetching bearer token:', error);
-    return null;
-  }
-};
-
-const getUserData = async (bearerToken: string) => {
-  try {
-    const url = `https://api.twitter.com/2/users/${USER_ID}`;
+    const url = `https://api.twitter.com/2/users/by/username/${username}`;
     const response = await axios.get(url, {
       headers: {
-        Authorization: `Bearer ${bearerToken}`,
+        Authorization: `Bearer ${BEARER_TOKEN}`,
       },
     });
 
-    return response.data;
+    console.log('Fetched User ID:', response.data.data.id); // Log the User ID
+    return response.data.data.id;
   } catch (error) {
-    console.error('Error fetching user data:', error);
+    console.error('Error fetching user ID:', error.response ? error.response.data : error.message);
     return null;
   }
 };
 
-const getLastPost = async (bearerToken: string) => {
+// Function to get the last tweet for a given user ID
+const getLastPost = async (userId: string) => {
   try {
-    const url = `https://api.twitter.com/2/users/${USER_ID}/tweets?max_results=1`;
+    const url = `https://api.twitter.com/2/users/${userId}/tweets?max_results=1`;
     const response = await axios.get(url, {
       headers: {
-        Authorization: `Bearer ${bearerToken}`,
+        Authorization: `Bearer ${BEARER_TOKEN}`,
       },
     });
 
+    console.log('Last post fetched successfully:', response.data);
     return response.data;
   } catch (error) {
-    console.error('Error fetching last post:', error);
+    console.error('Error fetching last post:', error.response ? error.response.data : error.message);
     return null;
   }
 };
 
-const fetchTwitterData = async () => {
-  const bearerToken = await getBearerToken();
-  if (!bearerToken) {
-    console.error('Failed to get Bearer Token.');
+// Main function to fetch the last tweet from @unenterLIVE
+const fetchLastPostFromUnenterLIVE = async () => {
+  const username = 'unenterLIVE';
+  const userId = await getUserIdByUsername(username);
+
+  if (!userId) {
+    console.error('Failed to fetch User ID for @unenterLIVE');
     return;
   }
 
-  const userData = await getUserData(bearerToken);
-  const lastPost = await getLastPost(bearerToken);
+  const lastPost = await getLastPost(userId);
 
-  const result = {
-    user: userData,
-    lastPost: lastPost,
-  };
-
-  console.log(JSON.stringify(result, null, 2));
+  console.log('Last post from @unenterLIVE:', JSON.stringify(lastPost, null, 2));
 };
 
-fetchTwitterData();
+fetchLastPostFromUnenterLIVE();
