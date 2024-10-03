@@ -1,5 +1,5 @@
 {
-  "name": "my-vercel-project",
+  "name": "webpage api",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -12,5 +12,9 @@
     "next": "latest",
     "react": "latest",
     "react-dom": "latest"
+  },
+  "devDependencies": {
+    "@vercel/node": "^1.12.0",
+    "typescript": "^4.5.2"
   }
 }
