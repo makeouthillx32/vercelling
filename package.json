@@ -11,6 +11,8 @@
     "axios": "^1.7.7",
     "next": "latest",
     "react": "latest",
-    "react-dom": "latest"
+    "react-dom": "latest",
+    "formiojs": "4.13.0",
+    "mongoose": "6.0.12"
   }
 }
