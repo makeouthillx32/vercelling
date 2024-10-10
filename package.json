@@ -1,5 +1,5 @@
 {
-  "name": "vercelling",
+  "name": "website-api",
   "version": "1.0.0",
   "repository": "https://github.com/vercel/examples.git",
   "license": "MIT",
@@ -15,7 +15,8 @@
     "react": "latest",
     "react-dom": "latest",
     "formiojs": "4.13.0",
-    "mongoose": "6.0.12"
+    "mongoose": "6.0.12",
+    "sass": "^1.69.5"
   },
   "devDependencies": {
     "@types/node": "^17.0.42",
