@@ -10,6 +10,8 @@
     "start": "next start"
   },
   "dependencies": {
+    "@popperjs/core": "^2.11.6",
+    "tippy.js": "^6.3.7",
     "axios": "^1.7.7",
     "next": "latest",
     "react": "latest",
